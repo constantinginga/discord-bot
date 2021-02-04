@@ -1,4 +1,4 @@
-import discord, asyncpraw
+import random, discord, asyncpraw
 
 reddit = asyncpraw.Reddit(client_id="OWgHAGU12eUpJQ",
 client_secret="61O6kJSVUNVv1VP7b1Gu8wPt8ADEpA",
@@ -8,6 +8,30 @@ async def generate_meme():
     subreddit = await reddit.subreddit("programmerhumor")
     meme = await subreddit.random()
     return meme.url
+
+async def generate_cute():
+    subreddit = await reddit.subreddit("eyebleach")
+    pic = await subreddit.random()
+    return pic.url
+
+def shrek():
+    return """
+⢀⡴⠑⡄⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ 
+⠸⡇⠀⠿⡀⠀⠀⠀⣀⡴⢿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠑⢄⣠⠾⠁⣀⣄⡈⠙⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⠀⢀⡀⠁⠀⠀⠈⠙⠛⠂⠈⣿⣿⣿⣿⣿⠿⡿⢿⣆⠀⠀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⢀⡾⣁⣀⠀⠴⠂⠙⣗⡀⠀⢻⣿⣿⠭⢤⣴⣦⣤⣹⠀⠀⠀⢀⢴⣶⣆ 
+⠀⠀⢀⣾⣿⣿⣿⣷⣮⣽⣾⣿⣥⣴⣿⣿⡿⢂⠔⢚⡿⢿⣿⣦⣴⣾⠁⠸⣼⡿ 
+⠀⢀⡞⠁⠙⠻⠿⠟⠉⠀⠛⢹⣿⣿⣿⣿⣿⣌⢤⣼⣿⣾⣿⡟⠉⠀⠀⠀⠀⠀ 
+⠀⣾⣷⣶⠇⠀⠀⣤⣄⣀⡀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀ 
+⠀⠉⠈⠉⠀⠀⢦⡈⢻⣿⣿⣿⣶⣶⣶⣶⣤⣽⡹⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⠉⠲⣽⡻⢿⣿⣿⣿⣿⣿⣿⣷⣜⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣷⣶⣮⣭⣽⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⣀⣀⣈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠻⠿⠿⠿⠿⠛⠉
+"""
 
 def read_token():
     with open("token.txt", "r") as f:
@@ -52,15 +76,19 @@ async def on_message(message):
     id = client.get_guild(806770937420578836)
 
     # List of valid commands
-    commands = ["!help", "!meme", "!users", "!ranking"]
+    commands = ["!help", "!meme", "!users", "!ranking", "!cute", "!shrek"]
     
-    if message.content not in commands and message.author != client.user:
+
+
+    if str(message.content)[0] == "!" and message.content not in commands and message.author != client.user:
         await message.channel.send("Command does not exist. Type !help for the list of commands.")
     elif message.content == commands[0]:
         embed = discord.Embed(title="Commands", description="Full list of commands")
         embed.add_field(name="!meme", value="Random programmer meme")
         embed.add_field(name="!users", value="Number of users")
         embed.add_field(name="!ranking", value="Ranking of users by number of messages")
+        embed.add_field(name="!cute", value="Random cute image")
+        embed.add_field(name="!shrek", value="THE GOD")
         await message.channel.send(content=None, embed=embed)
     elif message.content == commands[1]:    
         await message.channel.send(await generate_meme())
@@ -73,5 +101,9 @@ async def on_message(message):
             ranking += "#{} {} - {}\n".format(index, name[0], name[1])
 
         await message.channel.send(ranking)
+    elif message.content == commands[4]:
+        await message.channel.send(await generate_cute())
+    elif message.content == commands[5]:
+        await message.channel.send(shrek())
 
 client.run(token)
