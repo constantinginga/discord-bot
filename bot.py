@@ -54,7 +54,6 @@ async def history(channel):
 
     messages = await channel.history(limit=None).flatten()
     for message in messages:
-        print(message.author.name)
         if message.author == client.user:
             count["BOT"] += 1
         elif message.author.name == "Constantout":
@@ -71,15 +70,14 @@ async def history(channel):
     # return list of tuples
     return sorted(count.items(), key=lambda x: x[1], reverse=True)
 
+
 @client.event
 async def on_message(message):
-    id = client.get_guild(806770937420578836)
+    id = client.get_guild(755674901901213793)
 
     # List of valid commands
-    commands = ["!help", "!meme", "!users", "!ranking", "!cute", "!shrek"]
+    commands = ["!help", "!meme", "!users", "!ranking", "!cute", "!shrek", "!jakub"]
     
-
-
     if str(message.content)[0] == "!" and message.content not in commands and message.author != client.user:
         await message.channel.send("Command does not exist. Type !help for the list of commands.")
     elif message.content == commands[0]:
@@ -89,13 +87,14 @@ async def on_message(message):
         embed.add_field(name="!ranking", value="Ranking of users by number of messages")
         embed.add_field(name="!cute", value="Random cute image")
         embed.add_field(name="!shrek", value="THE GOD")
+        embed.add_field(name="!jakub", value="????")
         await message.channel.send(content=None, embed=embed)
     elif message.content == commands[1]:    
         await message.channel.send(await generate_meme())
     elif message.content == commands[2]:
         await message.channel.send(f"""Number of members: {id.member_count}""")
     elif message.content == commands[3]:
-        count = await history(client.get_channel(806770937420578839))
+        count = await history(client.get_channel(755674902358523938))
         ranking = "Top virgins:\n"
         for index, name in enumerate(count, start=1):
             ranking += "#{} {} - {}\n".format(index, name[0], name[1])
@@ -105,5 +104,7 @@ async def on_message(message):
         await message.channel.send(await generate_cute())
     elif message.content == commands[5]:
         await message.channel.send(shrek())
+    elif message.content == commands[6]:
+        await message.channel.send("Jakub is love, Jakub is life.")
 
 client.run(token)
